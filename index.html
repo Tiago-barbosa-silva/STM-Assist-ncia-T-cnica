@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+<div class="cabecalho">
+    <header>
+       <img class="logo" src="./img/file.jpg" alt=""> 
+       <h1>Ordem de Serviço</h1>
+        
+        <img class="engrenagem" src="./img/engrenagem.png" alt="">
+    </header>
+</div>
+    <form id="form" action="">
+
+        <label for="os">Numero da Os:</label>
+        <input type="number" name="os" id="os">
+
+        <label for="nome">Nome: </label>
+        <input placeholder="Insira seu Nome" type="text" name="nome" id="nome">
+        </label>
+
+        <label for="telefone">Telefone:</label>
+        <input placeholder="Insira seu Telefone" type="tel" name="telefone" id="telefone">
+
+        <label for="equipamento">Equipamento:</label>
+        <input placeholder="Insira seu Equipamento" type="text" name="equipamento" id="equipamento">
+
+        <label for="defeito">Defeito:</label>
+        <input placeholder="Insira seu defeito do equipamento" type="text" name="defeito" id="defeito">
+
+        <label for="valor">Valor:</label>
+        <input placeholder="Insira o valor do serviço" type="number" name="valor" id="valor">
+
+        <label for="observacao">Observação</label>
+        <textarea placeholder="Insira suas observações se caso necessário" name="observacao" id="observacao"></textarea>
+
+        <label for="data">Data:</label>
+        <input type="date" name="data" id="data">
+
+        <button type="submit">Enviar</button>
+
+    </form>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="index.js"></script>
+
+
+</html>
