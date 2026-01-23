@@ -15,7 +15,6 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-   
     background-color: #007BFF;
     color: white;
     padding: 15px 0;
@@ -100,4 +99,14 @@ button:hover {
 
 button:active {
     background-color: #004080;
+}
+
+@media (max-width: 1000px) {
+    header{
+        gap: 20px;
+    }
+
+    body{
+        padding: 0 ;
+    }
 }
