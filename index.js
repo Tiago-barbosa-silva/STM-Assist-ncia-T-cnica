@@ -1,148 +1,128 @@
+
+
 const { jsPDF } = window.jspdf;
+
+function primeiraLetraMaiuscula (string) {
+  return string
+   .toLowerCase()
+    .trim()
+    .split(" ")
+    .filter(p => p !== "")
+    .map(p => p.charAt(0).toUpperCase() + p.slice(1))
+    .join(" ");
+}
 
 const form = document.getElementById("form");
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const os = document.getElementById("os").value;
-  const nome = document.getElementById("nome").value;
-  const telefone = document.getElementById("telefone").value;
-  const equipamento = document.getElementById("equipamento").value;
-  const defeito = document.getElementById("defeito").value;
-  const valor = document.getElementById("valor").value;
-  const observacao = document.getElementById("observacao").value || "—";
+  const nome = primeiraLetraMaiuscula(
+    document.getElementById("nome").value
+);
+  const telefone =  
+  document.getElementById("telefone").value.trim();
+  const equipamento = primeiraLetraMaiuscula( document.getElementById("equipamento").value)
+  const defeito = primeiraLetraMaiuscula( document.getElementById("defeito").value);
+  const observacao = primeiraLetraMaiuscula( document.getElementById("observacao").value || "—");
+  if (!nome || !telefone || !equipamento || !defeito) {
+    alert("Preencha todos os campos obrigatórios.");
+    return;
+  }
 
-  // VALIDAÇÃO
-  // if (!os || !nome || !telefone || !equipamento || !defeito || !valor) {
-  //   alert("⚠️ Preencha todos os campos obrigatórios.");
-  //   return;
-  // }
+  const numeroOS = "OS-" + Date.now().toString().slice(10);
+  const dataAtual = new Date().toLocaleDateString("pt-BR");
 
-  const pdf = new jsPDF("p", "mm", "a4");
+  gerarPDF("VIA DO CLIENTE");
+  gerarPDF("VIA DA EMPRESA");
 
-  // =========================
-  // LOGO
-  // =========================
-  const logo = new Image();
-  logo.src = "./img/file.jpg";
-
-  logo.onload = () => {
-    pdf.addImage(logo, "JPEG", 10, 10, 30, 30);
+  function gerarPDF(via) {
+    const pdf = new jsPDF("p", "mm", "a5");
 
     // =========================
     // CABEÇALHO
     // =========================
     pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(18);
-    pdf.text("STM ASSISTÊNCIA TÉCNICA", 50, 18 );
-   
+    pdf.setFontSize(14);
+    pdf.text("STM ASSISTÊNCIA TÉCNICA", 74, 15, { align: "center" });
 
-    pdf.setFontSize(10);
+    pdf.setFontSize(9);
+    pdf.setFont("helvetica", "normal");
+    pdf.text("Tel: (11) 93457-4926", 74, 25, { align: "center" });
+
+    pdf.setFontSize(9);
     pdf.setFont("helvetica", "normal");
     pdf.text(
       "Rua Cel. Valfredo de Campos, 65 - Vila Nova Mazzei",
-      50,
-      24
+      35,
+      20
     );
+    pdf.line(10, 28, 138, 28);
 
-    pdf.text(
-      "Tel: (11) 93457-4926 | CNPJ: 30.123.456/0001-78",
-      50,
-      29
-    );
-
-    pdf.line(10, 35, 200, 35);
+   
 
     // =========================
     // TÍTULO
     // =========================
-    pdf.setFontSize(16);
+    pdf.setFontSize(12);
     pdf.setFont("helvetica", "bold");
-    pdf.text("ORÇAMENTO DE SERVIÇO", 105, 45, { align: "center" });
+    pdf.text("ORÇAMENTO DE SERVIÇO", 74, 36, { align: "center" });
+
+    pdf.setFontSize(9);
+    pdf.text(via, 74, 41, { align: "center" });
 
     // =========================
-    // CAIXA DE DADOS
+    // DADOS
     // =========================
-    pdf.rect(10, 55, 190, 90);
-
-    pdf.setFontSize(11);
-    let y = 65;
+    let y = 48;
+    pdf.setFontSize(10);
 
     function campo(label, valor) {
       pdf.setFont("helvetica", "bold");
-      pdf.text(label, 15, y);
-      pdf.setFont("helvetica", "normal");
-      pdf.text(valor, 45, y);
-      y += 8;
+      pdf.text(label, 10, y);
+      pdf.setFont("helvetica", "normal" , );
+      pdf.text(valor, 40, y);
+      y += 7;
     }
 
-    campo("OS:", os);
+    campo("OS:", numeroOS);
     campo("Cliente:", nome);
     campo("Telefone:", telefone);
     campo("Equipamento:", equipamento);
     campo("Defeito:", defeito);
+    campo("Data:", dataAtual);
 
     // =========================
-    // VALOR EM DESTAQUE
+    // OBSERVAÇÕES
     // =========================
-    y += 6;
-    const valorFormatado = parseFloat(valor).toFixed(2);
-    pdf.setFontSize(14);
-    pdf.setFont("helvetica", "bold");
-    pdf.rect(12, y - 6, 186, 12);
-    pdf.text(`VALOR TOTAL: R$ ${valorFormatado}`, 15, y + 2);
-
-    // =========================
-    // OBSERVAÇÃO
-    // =========================
-    y += 20;
-    pdf.setFontSize(11);
+    y += 5;
     pdf.setFont("helvetica", "normal");
     pdf.text(
-      pdf.splitTextToSize(`Observações: ${observacao}`, 180),
-      15,
+      pdf.splitTextToSize(`Observações: ${observacao}`, 120),
+      10,
       y
     );
 
     // =========================
+    // ASSINATURA
+    // =========================
+    y += 35;
+    pdf.line(30, y, 110, y);
+    pdf.setFontSize(9);
+    pdf.text("Assinatura do Cliente", 74, y + 5, { align: "center" });
+
+    // =========================
     // RODAPÉ
     // =========================
-    const dataAtual = new Date().toLocaleDateString("pt-BR");
-    pdf.setFontSize(9);
+    pdf.setFontSize(8);
     pdf.setTextColor(120);
     pdf.text(
-      `Documento gerado em ${dataAtual} • STM Assistência Técnica`,
-      105,
-      285,
+      `Gerado em ${dataAtual} • ${via}`,
+      74,
+      200,
       { align: "center" }
     );
 
-    // =========================
-    // SALVAR PDF
-    // =========================
-    pdf.save("orcamento.pdf");
-
-    // =========================
-    // WHATSAPP
-    // =========================
-    const numeroWhatsApp = "5511941320358";
-    const mensagem = "📄 Olá, segue o orçamento em PDF.";
-    const link = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(
-      mensagem
-    )}`;
-    window.open(link, "_blank");
-  };
+    pdf.save(`orcamento_${via.replaceAll(" ", "_")}.pdf`);
+  }
 });
-
-
-
-
-
-
-
-
-
-
- 
-
