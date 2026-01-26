@@ -123,6 +123,6 @@ form.addEventListener("submit", (e) => {
       { align: "center" }
     );
 
-    pdf.save(`orcamento_${via.replaceAll(" ", "_")}.pdf`);
+    pdf.save(`orcamento_${via.replace(" ", " ")} ${via === "VIA DO CLIENTE" ? nome : ""}  ${numeroOS} .pdf`);
   }
 });
