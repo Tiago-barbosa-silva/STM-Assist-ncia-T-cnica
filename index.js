@@ -37,7 +37,7 @@ form.addEventListener("submit", (e) => {
   gerarPDF("VIA DA EMPRESA");
 
   function gerarPDF(via) {
-    const pdf = new jsPDF("p", "mm", "a5");
+    const pdf = new jsPDF("p", "mm", "a4");
 
     // =========================
     // CABEÇALHO
@@ -107,9 +107,13 @@ form.addEventListener("submit", (e) => {
     // ASSINATURA
     // =========================
     y += 35;
+    
     pdf.line(30, y, 110, y);
+   
     pdf.setFontSize(9);
-    pdf.text("Assinatura do Cliente", 74, y + 5, { align: "center" });
+    pdf.text(`${via === "VIA DO CLIENTE" ? "Assinatura do cliente" : ""}`, 74, y + 5, { align: "center" });
+  
+ 
 
     // =========================
     // RODAPÉ
