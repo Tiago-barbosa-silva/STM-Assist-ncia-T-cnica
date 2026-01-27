@@ -37,20 +37,20 @@ form.addEventListener("submit", (e) => {
   gerarPDF("VIA DA EMPRESA");
 
   function gerarPDF(via) {
-    const pdf = new jsPDF("p", "mm", "a4");
+    const pdf = new jsPDF("p", "mm", "a5");
 
     // =========================
     // CABEÇALHO
     // =========================
     pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(14);
+    pdf.setFontSize(16);
     pdf.text("STM ASSISTÊNCIA TÉCNICA", 74, 15, { align: "center" });
 
-    pdf.setFontSize(9);
+    pdf.setFontSize(10);
     pdf.setFont("helvetica", "normal");
     pdf.text("Tel: (11) 93457-4926", 74, 25, { align: "center" });
 
-    pdf.setFontSize(9);
+    pdf.setFontSize(10);
     pdf.setFont("helvetica", "normal");
     pdf.text(
       "Rua Cel. Valfredo de Campos, 65 - Vila Nova Mazzei",
@@ -64,25 +64,25 @@ form.addEventListener("submit", (e) => {
     // =========================
     // TÍTULO
     // =========================
-    pdf.setFontSize(12);
+    pdf.setFontSize(14);
     pdf.setFont("helvetica", "bold");
     pdf.text("ORÇAMENTO DE SERVIÇO", 74, 36, { align: "center" });
 
-    pdf.setFontSize(9);
+    pdf.setFontSize(10);
     pdf.text(via, 74, 41, { align: "center" });
 
     // =========================
     // DADOS
     // =========================
     let y = 48;
-    pdf.setFontSize(10);
+    pdf.setFontSize(14);
 
     function campo(label, valor) {
       pdf.setFont("helvetica", "bold");
-      pdf.text(label, 10, y);
+      pdf.text(label, 10, y + 5);
       pdf.setFont("helvetica", "normal" , );
-      pdf.text(valor, 40, y);
-      y += 7;
+      pdf.text(valor, 45, y + 5);
+      y += 10;
     }
 
     campo("OS:", numeroOS);
@@ -95,7 +95,7 @@ form.addEventListener("submit", (e) => {
     // =========================
     // OBSERVAÇÕES
     // =========================
-    y += 5;
+    y += 10;
     pdf.setFont("helvetica", "normal");
     pdf.text(
       pdf.splitTextToSize(`Observações: ${observacao}`, 120),
@@ -106,19 +106,19 @@ form.addEventListener("submit", (e) => {
     // =========================
     // ASSINATURA
     // =========================
-    y += 35;
+    // y += 35;
     
-    pdf.line(30, y, 110, y);
+    // pdf.line(30, y, 110, y);
    
-    pdf.setFontSize(9);
-    pdf.text(`${via === "VIA DO CLIENTE" ? "Assinatura do cliente" : ""}`, 74, y + 5, { align: "center" });
+    // pdf.setFontSize(9);
+    // pdf.text(`${via === "VIA DO CLIENTE" ? "Assinatura do cliente" : ""}`, 74, y + 5, { align: "center" });
   
  
 
     // =========================
     // RODAPÉ
     // =========================
-    pdf.setFontSize(8);
+    pdf.setFontSize(10);
     pdf.setTextColor(120);
     pdf.text(
       `Gerado em ${dataAtual} • ${via}`,
