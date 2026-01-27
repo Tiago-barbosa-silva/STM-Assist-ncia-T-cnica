@@ -123,7 +123,7 @@ form.addEventListener("submit", (e) => {
     pdf.text(
       `Gerado em ${dataAtual} • ${via}`,
       74,
-      200,
+      150,
       { align: "center" }
     );
 
