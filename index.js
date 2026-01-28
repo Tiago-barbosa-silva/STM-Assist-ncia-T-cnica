@@ -2,6 +2,10 @@
 
 const { jsPDF } = window.jspdf;
 
+function formatarTelefone(telefone) {
+  return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+}
+
 function primeiraLetraMaiuscula (string) {
   return string
    .toLowerCase()
@@ -20,8 +24,10 @@ form.addEventListener("submit", (e) => {
   const nome = primeiraLetraMaiuscula(
     document.getElementById("nome").value
 );
-  const telefone =  
-  document.getElementById("telefone").value.trim();
+  const telefone = formatarTelefone(
+    document.getElementById("telefone").value
+  )  
+  
   const equipamento = primeiraLetraMaiuscula( document.getElementById("equipamento").value)
   const defeito = primeiraLetraMaiuscula( document.getElementById("defeito").value);
   const observacao = primeiraLetraMaiuscula( document.getElementById("observacao").value || "—");
@@ -46,15 +52,15 @@ form.addEventListener("submit", (e) => {
     pdf.setFontSize(16);
     pdf.text("STM ASSISTÊNCIA TÉCNICA", 74, 15, { align: "center" });
 
-    pdf.setFontSize(10);
-    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(12);
+    pdf.setFont("helvetica", "bold");
     pdf.text("Tel: (11) 93457-4926", 74, 25, { align: "center" });
 
-    pdf.setFontSize(10);
+    pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
     pdf.text(
       "Rua Cel. Valfredo de Campos, 65 - Vila Nova Mazzei",
-      35,
+      25,
       20
     );
     pdf.line(10, 28, 138, 28);
@@ -96,7 +102,7 @@ form.addEventListener("submit", (e) => {
     // OBSERVAÇÕES
     // =========================
     y += 10;
-    pdf.setFont("helvetica", "normal");
+    pdf.setFont("helvetica", "bold");
     pdf.text(
       pdf.splitTextToSize(`Observações: ${observacao}`, 120),
       10,
