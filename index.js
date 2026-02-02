@@ -1,14 +1,13 @@
 
-
 const { jsPDF } = window.jspdf;
 
 function formatarTelefone(telefone) {
   return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
 }
 
-function primeiraLetraMaiuscula (string) {
+function primeiraLetraMaiuscula(string) {
   return string
-   .toLowerCase()
+    .toLowerCase()
     .trim()
     .split(" ")
     .filter(p => p !== "")
@@ -21,16 +20,12 @@ const form = document.getElementById("form");
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const nome = primeiraLetraMaiuscula(
-    document.getElementById("nome").value
-);
-  const telefone = formatarTelefone(
-    document.getElementById("telefone").value
-  )  
-  
-  const equipamento = primeiraLetraMaiuscula( document.getElementById("equipamento").value)
-  const defeito = primeiraLetraMaiuscula( document.getElementById("defeito").value);
-  const observacao = primeiraLetraMaiuscula( document.getElementById("observacao").value || "—");
+  const nome = primeiraLetraMaiuscula(document.getElementById("nome").value);
+  const telefone = formatarTelefone(document.getElementById("telefone").value);
+  const equipamento = primeiraLetraMaiuscula(document.getElementById("equipamento").value);
+  const defeito = primeiraLetraMaiuscula(document.getElementById("defeito").value);
+  const observacao = primeiraLetraMaiuscula(document.getElementById("observacao").value || "—");
+
   if (!nome || !telefone || !equipamento || !defeito) {
     alert("Preencha todos os campos obrigatórios.");
     return;
@@ -43,52 +38,59 @@ form.addEventListener("submit", (e) => {
   gerarPDF("VIA DA EMPRESA");
 
   function gerarPDF(via) {
-    const pdf = new jsPDF("p", "mm", "a5");
+    const pdf = new jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: [76, 120]
+    });
+
+    const centro = 38;
+    const margemX = 4;
+    const larguraUtil = 68;
 
     // =========================
     // CABEÇALHO
     // =========================
     pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(16);
-    pdf.text("STM ASSISTÊNCIA TÉCNICA", 74, 15, { align: "center" });
+    pdf.setFontSize(11);
+    pdf.text("STM ASSISTÊNCIA TÉCNICA", centro, 10, { align: "center" });
 
-    pdf.setFontSize(12);
-    pdf.setFont("helvetica", "bold");
-    pdf.text("Tel: (11) 93457-4926", 74, 25, { align: "center" });
+    pdf.setFontSize(9);
+    pdf.text("Tel: (11) 93457-4926", centro, 15, { align: "center" });
 
-    pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
     pdf.text(
       "Rua Cel. Valfredo de Campos, 65 - Vila Nova Mazzei",
-      25,
-      20
+      centro,
+      20,
+      {align: "center"},
+      { maxWidth: larguraUtil }
     );
-    pdf.line(10, 28, 138, 28);
 
-   
+    pdf.line(margemX, 25, 72, 25);
 
     // =========================
     // TÍTULO
     // =========================
-    pdf.setFontSize(14);
     pdf.setFont("helvetica", "bold");
-    pdf.text("ORÇAMENTO DE SERVIÇO", 74, 36, { align: "center" });
-
     pdf.setFontSize(10);
-    pdf.text(via, 74, 41, { align: "center" });
+    pdf.text("ORÇAMENTO DE SERVIÇO", centro, 32, { align: "center" });
+
+    pdf.setFontSize(8);
+    pdf.text(via, centro, 37, { align: "center" });
 
     // =========================
     // DADOS
     // =========================
-    let y = 48;
-    pdf.setFontSize(14);
+    let y = 42;
+    pdf.setFontSize(9);
 
     function campo(label, valor) {
       pdf.setFont("helvetica", "bold");
-      pdf.text(label, 10, y + 5);
-      pdf.setFont("helvetica", "normal" , );
-      pdf.text(valor, 45, y + 5);
-      y += 10;
+      pdf.text(label, margemX, y);
+      pdf.setFont("helvetica", "normal");
+      pdf.text(valor, 28, y, { maxWidth: 44 });
+      y += 6;
     }
 
     campo("OS:", numeroOS);
@@ -101,38 +103,175 @@ form.addEventListener("submit", (e) => {
     // =========================
     // OBSERVAÇÕES
     // =========================
-    y += 10;
+    y += 4;
     pdf.setFont("helvetica", "bold");
+    pdf.text("Observações:", margemX, y);
+
+    y += 4;
+    pdf.setFont("helvetica", "normal");
     pdf.text(
-      pdf.splitTextToSize(`Observações: ${observacao}`, 120),
-      10,
+      pdf.splitTextToSize(observacao, larguraUtil),
+      margemX,
       y
     );
 
     // =========================
-    // ASSINATURA
-    // =========================
-    // y += 35;
-    
-    // pdf.line(30, y, 110, y);
-   
-    // pdf.setFontSize(9);
-    // pdf.text(`${via === "VIA DO CLIENTE" ? "Assinatura do cliente" : ""}`, 74, y + 5, { align: "center" });
-  
- 
-
-    // =========================
     // RODAPÉ
     // =========================
-    pdf.setFontSize(10);
+    pdf.setFontSize(7);
     pdf.setTextColor(120);
     pdf.text(
       `Gerado em ${dataAtual} • ${via}`,
-      74,
-      150,
+      centro,
+      115,
       { align: "center" }
     );
 
-    pdf.save(`orcamento_${via.replace(" ", " ")} ${via === "VIA DO CLIENTE" ? nome : ""}  ${numeroOS} .pdf`);
+    pdf.save(`orcamento_${via}_${numeroOS}.pdf`);
   }
 });
+
+
+
+
+
+// const { jsPDF } = window.jspdf;
+
+// function formatarTelefone(telefone) {
+//   return telefone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+// }
+
+// function primeiraLetraMaiuscula (string) {
+//   return string
+//    .toLowerCase()
+//     .trim()
+//     .split(" ")
+//     .filter(p => p !== "")
+//     .map(p => p.charAt(0).toUpperCase() + p.slice(1))
+//     .join(" ");
+// }
+
+// const form = document.getElementById("form");
+
+// form.addEventListener("submit", (e) => {
+//   e.preventDefault();
+
+//   const nome = primeiraLetraMaiuscula(
+//     document.getElementById("nome").value
+// );
+//   const telefone = formatarTelefone(
+//     document.getElementById("telefone").value
+//   )  
+  
+//   const equipamento = primeiraLetraMaiuscula( document.getElementById("equipamento").value)
+//   const defeito = primeiraLetraMaiuscula( document.getElementById("defeito").value);
+//   const observacao = primeiraLetraMaiuscula( document.getElementById("observacao").value || "—");
+//   if (!nome || !telefone || !equipamento || !defeito) {
+//     alert("Preencha todos os campos obrigatórios.");
+//     return;
+//   }
+
+//   const numeroOS = "OS-" + Date.now().toString().slice(10);
+//   const dataAtual = new Date().toLocaleDateString("pt-BR");
+
+//   gerarPDF("VIA DO CLIENTE");
+//   gerarPDF("VIA DA EMPRESA");
+
+//   function gerarPDF(via) {
+//     const pdf = new jsPDF({
+//       orientation: "p",
+//       unit: "mm",
+//       format: [76,120]
+//     });
+
+//     // =========================
+//     // CABEÇALHO
+//     // =========================
+//     pdf.setFont("helvetica", "bold");
+//     pdf.setFontSize(16);
+//     pdf.text("STM ASSISTÊNCIA TÉCNICA", 74, 15, { align: "center" });
+
+//     pdf.setFontSize(12);
+//     pdf.setFont("helvetica", "bold");
+//     pdf.text("Tel: (11) 93457-4926", 74, 25, { align: "center" });
+
+//     pdf.setFontSize(12);
+//     pdf.setFont("helvetica", "normal");
+//     pdf.text(
+//       "Rua Cel. Valfredo de Campos, 65 - Vila Nova Mazzei",
+//       25,
+//       20
+//     );
+//     pdf.line(10, 28, 138, 28);
+
+   
+
+//     // =========================
+//     // TÍTULO
+//     // =========================
+//     pdf.setFontSize(14);
+//     pdf.setFont("helvetica", "bold");
+//     pdf.text("ORÇAMENTO DE SERVIÇO", 74, 36, { align: "center" });
+
+//     pdf.setFontSize(10);
+//     pdf.text(via, 74, 41, { align: "center" });
+
+//     // =========================
+//     // DADOS
+//     // =========================
+//     let y = 48;
+//     pdf.setFontSize(14);
+
+//     function campo(label, valor) {
+//       pdf.setFont("helvetica", "bold");
+//       pdf.text(label, 10, y + 5);
+//       pdf.setFont("helvetica", "normal" , );
+//       pdf.text(valor, 45, y + 5);
+//       y += 10;
+//     }
+
+//     campo("OS:", numeroOS);
+//     campo("Cliente:", nome);
+//     campo("Telefone:", telefone);
+//     campo("Equipamento:", equipamento);
+//     campo("Defeito:", defeito);
+//     campo("Data:", dataAtual);
+
+//     // =========================
+//     // OBSERVAÇÕES
+//     // =========================
+//     y += 10;
+//     pdf.setFont("helvetica", "bold");
+//     pdf.text(
+//       pdf.splitTextToSize(`Observações: ${observacao}`, 120),
+//       10,
+//       y
+//     );
+
+//     // =========================
+//     // ASSINATURA
+//     // =========================
+//     // y += 35;
+    
+//     // pdf.line(30, y, 110, y);
+   
+//     // pdf.setFontSize(9);
+//     // pdf.text(`${via === "VIA DO CLIENTE" ? "Assinatura do cliente" : ""}`, 74, y + 5, { align: "center" });
+  
+ 
+
+//     // =========================
+//     // RODAPÉ
+//     // =========================
+//     pdf.setFontSize(10);
+//     pdf.setTextColor(120);
+//     pdf.text(
+//       `Gerado em ${dataAtual} • ${via}`,
+//       74,
+//       150,
+//       { align: "center" }
+//     );
+
+//     pdf.save(`orcamento_${via.replace(" ", " ")} ${via === "VIA DO CLIENTE" ? nome : ""}  ${numeroOS} .pdf`);
+//   }
+// });
