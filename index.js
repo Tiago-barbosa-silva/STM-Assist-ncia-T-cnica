@@ -41,7 +41,7 @@ form.addEventListener("submit", (e) => {
     const pdf = new jsPDF({
       orientation: "p",
       unit: "mm",
-      format: [76, 120]
+      format: [76, 180]
     });
 
     const centro = 38;
@@ -52,10 +52,10 @@ form.addEventListener("submit", (e) => {
     // CABEÇALHO
     // =========================
     pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(11);
-    pdf.text("STM ASSISTÊNCIA TÉCNICA", centro, 10, { align: "center" });
-
     pdf.setFontSize(9);
+    pdf.text("STM ASSISTÊNCIA TÉCNICA", centro, 10, { align: "center" }, );
+
+    pdf.setFontSize(7.5);
     pdf.text("Tel: (11) 93457-4926", centro, 15, { align: "center" });
 
     pdf.setFont("helvetica", "normal");
@@ -73,11 +73,11 @@ form.addEventListener("submit", (e) => {
     // TÍTULO
     // =========================
     pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(10);
+    pdf.setFontSize(8);
     pdf.text("ORÇAMENTO DE SERVIÇO", centro, 32, { align: "center" });
 
-    pdf.setFontSize(8);
-    pdf.text(via, centro, 37, { align: "center" });
+    pdf.setFontSize(7);
+    pdf.text(`${via} ${via === "VIA DO CLIENTE" ? nome : "STM"}`, centro, 39, { align: "center" });
 
     // =========================
     // DADOS
@@ -86,11 +86,11 @@ form.addEventListener("submit", (e) => {
     pdf.setFontSize(9);
 
     function campo(label, valor) {
-      pdf.setFont("helvetica", "bold");
-      pdf.text(label, margemX, y);
-      pdf.setFont("helvetica", "normal");
-      pdf.text(valor, 28, y, { maxWidth: 44 });
-      y += 6;
+      pdf.setFont("helvetica", "bold"); // Define a fonte para negrito
+      pdf.text(label, margemX, y + 5); // Define a largura máxima para o label
+      pdf.setFont("helvetica", "normal"); // Define a fonte para normal
+      pdf.text(valor, 28, y + 5, { maxWidth: 44 }); // Define a largura máxima para o valor
+      y += 8.5; // Incrementa a posição vertical
     }
 
     campo("OS:", numeroOS);
@@ -105,14 +105,14 @@ form.addEventListener("submit", (e) => {
     // =========================
     y += 4;
     pdf.setFont("helvetica", "bold");
-    pdf.text("Observações:", margemX, y);
+    pdf.text("Observações:", margemX, y + 5 );
 
     y += 4;
     pdf.setFont("helvetica", "normal");
     pdf.text(
       pdf.splitTextToSize(observacao, larguraUtil),
       margemX,
-      y
+      y + 7
     );
 
     // =========================
@@ -123,11 +123,11 @@ form.addEventListener("submit", (e) => {
     pdf.text(
       `Gerado em ${dataAtual} • ${via}`,
       centro,
-      115,
+      130,
       { align: "center" }
     );
 
-    pdf.save(`orcamento_${via}_${numeroOS}.pdf`);
+    pdf.save(`orcamento_${via}_${via === "VIA DO CLIENTE" ? nome : "STM"}_${numeroOS}.pdf`);
   }
 });
 
