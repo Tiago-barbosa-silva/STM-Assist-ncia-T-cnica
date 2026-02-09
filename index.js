@@ -34,10 +34,9 @@ form.addEventListener("submit", (e) => {
   const numeroOS = "OS-" + Date.now().toString().slice(10);
   const dataAtual = new Date().toLocaleDateString("pt-BR");
 
-  gerarPDF("VIA DO CLIENTE");
-  gerarPDF("VIA DA EMPRESA");
+ 
 
-  function gerarPDF(via) {
+  function gerarPDF() {
     const pdf = new jsPDF({
       orientation: "p",
       unit: "mm",
@@ -55,9 +54,11 @@ form.addEventListener("submit", (e) => {
     pdf.setFontSize(9);
     pdf.text("STM ASSISTÊNCIA TÉCNICA", centro, 10, { align: "center" }, );
 
-    pdf.setFontSize(7.5);
-    pdf.text("Tel: (11) 93457-4926", centro, 15, { align: "center" });
+    pdf.setFontSize(9);
+     pdf.setFont("helvetica", "bold");
+    pdf.text("Tel: (11) 98064-2242", centro, 15, { align: "center" });
 
+    pdf.setFontSize(7.5)
     pdf.setFont("helvetica", "normal");
     pdf.text(
       "Rua Cel. Valfredo de Campos, 65 - Vila Nova Mazzei",
@@ -76,8 +77,7 @@ form.addEventListener("submit", (e) => {
     pdf.setFontSize(8);
     pdf.text("ORÇAMENTO DE SERVIÇO", centro, 32, { align: "center" });
 
-    pdf.setFontSize(7);
-    pdf.text(`${via} ${via === "VIA DO CLIENTE" ? nome : "STM"}`, centro, 39, { align: "center" });
+  
 
     // =========================
     // DADOS
@@ -118,17 +118,18 @@ form.addEventListener("submit", (e) => {
     // =========================
     // RODAPÉ
     // =========================
-    pdf.setFontSize(7);
-    pdf.setTextColor(120);
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(0, 0, 0);
     pdf.text(
-      `Gerado em ${dataAtual} • ${via}`,
+      `Gerado em ${dataAtual}`,
       centro,
       130,
       { align: "center" }
     );
 
-    pdf.save(`orcamento_${via}_${via === "VIA DO CLIENTE" ? nome : "STM"}_${numeroOS}.pdf`);
+    pdf.save(`Orçamento_${numeroOS}.pdf`);
   }
+  gerarPDF();
 });
 
 
